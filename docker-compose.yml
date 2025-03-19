@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  app:
+    container_name: nest-template-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+    env_file:
+      - .env
+    command: >
+      sh -c "
+      npm install &&
+      npm run start:dev
+      "
+    networks:
+      - nest-template-network
+      
+  db:
+    image: postgres:14-alpine
+    container_name: nest-template-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nestdb
+    volumes:
+      - nest-template-data:/var/lib/postgresql/data
+    networks:
+      - nest-template-network
+
+volumes:
+  nest-template-data:
+
+networks:
+  nest-template-network:
+    driver: bridge
