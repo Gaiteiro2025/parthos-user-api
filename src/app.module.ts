@@ -1,17 +1,16 @@
 import { Module } from '@nestjs/common';
-import { HealthCheckModule } from './health-check/health-check.module';
-import { UserModule } from './user/user.module';
-//import { AppDataSource } from './ormconfig';
 import { ConfigService } from '@nestjs/config';
-import { appDataSource } from './ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { appDataSource } from './ormconfig';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(appDataSource.options),
-    HealthCheckModule,
-    UserModule,
+    AuthModule,
+    UsersModule,
   ],
   providers: [ConfigService],
 })
-export class AppModule {}
+export class AppModule { }

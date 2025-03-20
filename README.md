@@ -1,128 +1,106 @@
-# Nest Template API
+# Parthos User API
 
-Este projeto é um template para criar APIs utilizando o framework [NestJS](https://nestjs.com/). Ele vem configurado com boas práticas, suporte a TypeORM, Swagger para documentação e um pipeline de testes.
+Este repositório contém a API de usuário e autenticação do Parthos.
 
 ## Índice
 
-1. [Personalização do Template](#personalizacao-do-template)
-2. [Instalação](#instalacao)
+1. [Instalação](#instalacao)
+2. [Configuração do Ambiente](#configuracao-do-ambiente)
 3. [Uso](#uso)
 4. [Docker](#docker)
 5. [Testes](#testes)
-6. [Contribuição](#contribuicao)
-
----
-
-## Personalização do Template
-
-Para personalizar este template, siga os passos abaixo:
-
-### Alterar o nome do projeto
-
-1. Substitua todas as ocorrências de `nest-template` pelo nome desejado para o projeto (por exemplo, `nome-do-projeto`).
-2. Substitua todas as ocorrências de `NestTemplateApi` pelo formato PascalCase do novo nome (por exemplo, `NomeDoProjeto`).
-
-#### No projeto
-
-- **`package.json`**: Atualize os campos `name` e `description`:
-
-```json
-{
-  "name": "nome-do-projeto",
-  "description": "Descrição do projeto"
-}
-```
-
-- **Nomes dos arquivos principais**:
-  - Renomeie arquivos, se necessário, para refletir o novo nome do projeto.
-
-- **Módulos e Classes**:
-  - Substitua `NestTemplateApi` por `NomeDoProjeto` em todos os arquivos TypeScript.
-
-```typescript
-@Module({
-  imports: [],
-  controllers: [],
-  providers: [],
-})
-export class NomeDoProjetoModule {}
-```
-
-#### No Docker
-
-- Atualize o nome da imagem no `Dockerfile` e no `docker-compose.yml`.
-
-```dockerfile
-# Dockerfile
-LABEL name="nome-do-projeto"
-```
-
-```yaml
-# docker-compose.yml
-services:
-  app:
-    image: nome-do-projeto
-```
-
-#### Em toda a base de código
-
-Use um comando de busca e substituição para alterar o nome globalmente:
-
-```bash
-grep -rl 'nest-template-api' ./ | xargs sed -i 's/nest-template-api/nome-do-projeto/g'
-grep -rl 'NestTemplateApi' ./ | xargs sed -i 's/NestTemplateApi/NomeDoProjeto/g'
-```
+6. [Integração Contínua](#integracao-continua)
+7. [Contribuição](#contribuicao)
+8. [Licença](#licenca)
 
 ---
 
 ## Instalação
 
-Clone este repositório e instale as dependências:
+Clone este repositório:
 
 ```bash
-$ git clone https://github.com/seu-usuario/nest-template-api.git
-$ cd nest-template-api
-$ docker compose up --build
+$ git clone https://github.com/Gaiteiro2025/parthos-user-api.git
+$ cd parthos-user-api
+```
+
+Instale as dependências:
+
+```bash
+$ npm install
+```
+
+---
+
+## Configuração do Ambiente
+
+Antes de rodar o projeto, crie um arquivo `.env` na raiz do projeto e configure as variáveis de ambiente necessárias.
+
+Exemplo de `.env`:
+
+```ini
+DB_HOST=db
+DB_PORT=5432
+DB_USER=postgres
+DB_PASS=postgres
+DB_NAME=nestdb
+JWT_SECRET=default_secret
+
 ```
 
 ## Uso
 
-Este projeto inclui suporte ao Docker para facilitar a execução e o teste em ambientes isolados.
-
-#### Subir o ambiente de desenvolvimento
+Para iniciar a aplicação em modo de desenvolvimento:
 
 ```bash
-docker compose up
+$ npm run start:dev
 ```
 
-#### Rodar os testes em um container
+A API estará disponível em: [http://localhost:3001](http://localhost:3001)
 
-```bash
-docker compose -f docker-compose.test.yml up
-```
-
-#### Execute a aplicação em modo de DESENVOLVIMENTO:
-
-```bash
-$ docker exec -it nest-template-api sh
-```
-
-#### Execute a aplicação em modo de TESTES:
-
-```bash
-$ docker exec -it nest-template-test-api s
-```
-
-Acesse a API no navegador em: [http://localhost:3000](http://localhost:3000)
-
-A documentação Swagger estará disponível em: [http://localhost:3000/api](http://localhost:3000/api)
+A documentação Swagger estará em: [http://localhost:3001/api](http://localhost:3001/api)
 
 ---
+
+## Docker
+
+O projeto inclui suporte ao Docker para facilitar a execução e os testes.
+
+### Subir o ambiente de desenvolvimento
+
+```bash
+$ docker-compose up --build
+```
+
+Com o contêiner rodando, aplique as migrations:
+
+```bash
+$ docker exec -it parthos-user-api sh -c "npm run typeorm:migrate src/migrations/CreateUserTable"
+```
+
+### Rodar os testes em um container
+
+```bash
+docker-compose -f docker-compose.test.yml up
+```
+
+### Acessar o container para execução manual
+
+```bash
+$ docker exec -it parthos-user-api sh
+```
+
+Para o ambiente de testes:
+
+```bash
+$ docker exec -it parthos-user-test-api sh
+```
+
+---
+
 ## Testes
 
 ### Testes Unitários
-
-Rode os testes unitários com o seguinte comando:
 
 ```bash
 $ npm run test
@@ -130,15 +108,11 @@ $ npm run test
 
 ### Testes de Cobertura
 
-Gere o relatório de cobertura:
-
 ```bash
 $ npm run test:cov
 ```
 
 ### Testes End-to-End (E2E)
-
-Execute os testes E2E:
 
 ```bash
 $ npm run test:e2e
@@ -146,17 +120,20 @@ $ npm run test:e2e
 
 ### Testes com Docker Compose
 
-Para rodar os testes em um ambiente isolado usando Docker Compose, utilize o arquivo `docker-compose.test.yml`:
-
 ```bash
 docker-compose -f docker-compose.test.yml up
 ```
 
 ---
 
-## Contribuição
+## Integração Contínua
 
-Contribuições são bem-vindas! Siga os passos abaixo:
+O projeto utiliza GitHub Actions para rodar os testes automaticamente nas PRs para `main`.
+
+Arquivo `.github/workflows/test.yml`:
+
+
+## Contribuição
 
 1. Faça um fork do repositório.
 2. Crie uma branch para sua feature: `git checkout -b minha-feature`.
