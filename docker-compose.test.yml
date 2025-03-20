@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   test-app:
-    container_name: parthos-user-test-api
+    container_name: template-parthos-test-api
     build:
       context: .
       dockerfile: Dockerfile
