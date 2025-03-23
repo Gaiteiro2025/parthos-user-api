@@ -5,11 +5,15 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const host = process.env.HOST || 'localhost';
+  const apiUrl = host === 'localhost' ? 'http://localhost:3002' : 'http://localhost:3000/task';
   const config = new DocumentBuilder()
     .setTitle(packageJson.name)
     .setDescription(packageJson.description)
     .setVersion(packageJson.version)
-    .addBearerAuth() // Caso queira adicionar autenticação Bearer token
+    .addServer(apiUrl)
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
