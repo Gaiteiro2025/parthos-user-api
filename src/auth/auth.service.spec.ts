@@ -1,14 +1,13 @@
 import { ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 
-// Mock bcrypt module directly
-jest.mock('bcrypt', () => ({
+jest.mock('bcryptjs', () => ({
   compare: jest.fn(),
-  hash: jest.fn(), // Mock the hash function as well
+  hash: jest.fn(),
 }));
 
 describe('AuthService', () => {
