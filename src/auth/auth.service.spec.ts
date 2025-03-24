@@ -46,12 +46,18 @@ describe('AuthService', () => {
     it('should throw ConflictException if email is already in use', async () => {
       mockUsersService.findByEmail.mockResolvedValue({} as any);
 
-      const registerDto = { name: 'Test', email: 'test@test.com', password: 'password' };
+      const registerDto = {
+        name: 'Test',
+        email: 'test@test.com',
+        password: 'password',
+      };
 
       await expect(authService.register(registerDto)).rejects.toThrowError(
-        new ConflictException('Email já está em uso.')
+        new ConflictException('Email já está em uso.'),
       );
-      expect(mockUsersService.findByEmail).toHaveBeenCalledWith('test@test.com');
+      expect(mockUsersService.findByEmail).toHaveBeenCalledWith(
+        'test@test.com',
+      );
     });
 
     it('should return a JWT token when registration is successful', async () => {
@@ -63,7 +69,11 @@ describe('AuthService', () => {
         password: 'hashed_password',
       });
 
-      const registerDto = { name: 'Test', email: 'test@test.com', password: 'password' };
+      const registerDto = {
+        name: 'Test',
+        email: 'test@test.com',
+        password: 'password',
+      };
 
       mockJwtService.sign.mockReturnValue('jwt_token_example');
 
@@ -71,7 +81,12 @@ describe('AuthService', () => {
 
       expect(result).toEqual({
         access_token: 'jwt_token_example',
-        user: { id: '1', email: 'test@test.com', name: 'Test', password: 'hashed_password' },
+        user: {
+          id: '1',
+          email: 'test@test.com',
+          name: 'Test',
+          password: 'hashed_password',
+        },
       });
       expect(mockUsersService.create).toHaveBeenCalledWith({
         name: 'Test',
@@ -88,14 +103,20 @@ describe('AuthService', () => {
 
       const loginDto = { email: 'test@test.com', password: 'wrongpassword' };
 
-      await expect(authService.login(loginDto.email, loginDto.password)).rejects.toThrowError(
-        new ConflictException('Credenciais inválidas.')
+      await expect(
+        authService.login(loginDto.email, loginDto.password),
+      ).rejects.toThrowError(new ConflictException('Credenciais inválidas.'));
+      expect(mockUsersService.findByEmail).toHaveBeenCalledWith(
+        'test@test.com',
       );
-      expect(mockUsersService.findByEmail).toHaveBeenCalledWith('test@test.com');
     });
 
     it('should return a JWT token when login is successful', async () => {
-      const mockUser = { id: '1', email: 'test@test.com', password: 'hashed_password' };
+      const mockUser = {
+        id: '1',
+        email: 'test@test.com',
+        password: 'hashed_password',
+      };
       mockUsersService.findByEmail.mockResolvedValue(mockUser);
 
       const loginDto = { email: 'test@test.com', password: 'password' };
@@ -104,9 +125,14 @@ describe('AuthService', () => {
 
       const result = await authService.login(loginDto.email, loginDto.password);
 
-      expect(result).toEqual({ access_token: 'jwt_token_example' });
-      expect(mockUsersService.findByEmail).toHaveBeenCalledWith('test@test.com');
-      expect(bcrypt.compare).toHaveBeenCalledWith(loginDto.password, 'hashed_password');
+      expect(result).toEqual({ access_token: 'jwt_token_example', user: mockUser });
+      expect(mockUsersService.findByEmail).toHaveBeenCalledWith(
+        'test@test.com',
+      );
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        loginDto.password,
+        'hashed_password',
+      );
       expect(mockJwtService.sign).toHaveBeenCalled();
     });
   });
@@ -115,25 +141,42 @@ describe('AuthService', () => {
     it('should return null if user not found', async () => {
       mockUsersService.findByEmail.mockResolvedValue(null);
 
-      const result = await authService.validateCredentials('nonexistent@test.com', 'password');
+      const result = await authService.validateCredentials(
+        'nonexistent@test.com',
+        'password',
+      );
       expect(result).toBeNull();
     });
 
     it('should return null if password is incorrect', async () => {
-      mockUsersService.findByEmail.mockResolvedValue({ id: '1', email: 'test@test.com', password: 'hashed_password' });
-      (bcrypt.compare as jest.Mock).mockResolvedValue(false); // Simulando senha incorreta
+      mockUsersService.findByEmail.mockResolvedValue({
+        id: '1',
+        email: 'test@test.com',
+        password: 'hashed_password',
+      });
+      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      const result = await authService.validateCredentials('test@test.com', 'wrongpassword');
+      const result = await authService.validateCredentials(
+        'test@test.com',
+        'wrongpassword',
+      );
       expect(result).toBeNull();
     });
 
     it('should return user data if credentials are valid', async () => {
-      const mockUser = { id: '1', email: 'test@test.com', password: 'hashed_password' };
+      const mockUser = {
+        id: '1',
+        email: 'test@test.com',
+        password: 'hashed_password',
+      };
       mockUsersService.findByEmail.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      const result = await authService.validateCredentials('test@test.com', 'password');
-      expect(result).toEqual({ id: '1', email: 'test@test.com' });
+      const result = await authService.validateCredentials(
+        'test@test.com',
+        'password',
+      );
+      expect(result).toEqual(mockUser);
     });
   });
 });

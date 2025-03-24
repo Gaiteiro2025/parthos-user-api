@@ -1,5 +1,6 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'; // Importe os decoradores do Swagger
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -26,7 +27,10 @@ export class AuthController {
     status: 401,
     description: 'Credenciais inválidas.',
   })
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body() loginDto: LoginDto): Promise<{
+    access_token: string;
+    user: User;
+  }> {
     return this.authService.login(loginDto.email, loginDto.password);
   }
 
@@ -41,7 +45,10 @@ export class AuthController {
     status: 400,
     description: 'Dados inválidos no registro.',
   })
-  async register(@Body() registerDto: RegisterDto) {
+  async register(@Body() registerDto: RegisterDto): Promise<{
+    access_token: string;
+    user: User;
+  }> {
     return this.authService.register(registerDto);
   }
 }

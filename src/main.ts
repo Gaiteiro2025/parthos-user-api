@@ -5,9 +5,12 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  // app.enableCors();
   const host = process.env.HOST || 'localhost';
-  const apiUrl = host === 'localhost' ? 'http://localhost:3002' : 'http://localhost:3000/task';
+  const apiUrl =
+    host === 'localhost'
+      ? 'http://localhost:3002'
+      : 'http://localhost:3000/user-api';
   const config = new DocumentBuilder()
     .setTitle(packageJson.name)
     .setDescription(packageJson.description)

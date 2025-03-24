@@ -15,7 +15,9 @@ describe('AuthController', () => {
   };
 
   const mockUsersService = {
-    findByEmail: jest.fn().mockResolvedValue({ email: 'test@test.com', username: 'testuser' }),
+    findByEmail: jest
+      .fn()
+      .mockResolvedValue({ email: 'test@test.com', username: 'testuser' }),
   };
 
   beforeEach(async () => {
@@ -41,12 +43,20 @@ describe('AuthController', () => {
 
       const result = await authController.login(loginDto);
       expect(result).toEqual({ access_token: 'jwt_token_example' });
-      expect(authService.login).toHaveBeenCalledWith(loginDto.email, loginDto.password);
+      expect(authService.login).toHaveBeenCalledWith(
+        loginDto.email,
+        loginDto.password,
+      );
     });
 
     it('should throw an error if credentials are invalid', async () => {
-      const loginDto: LoginDto = { email: 'invalid@test.com', password: 'wrongpass' };
-      mockAuthService.login.mockRejectedValueOnce(new Error('Invalid credentials'));
+      const loginDto: LoginDto = {
+        email: 'invalid@test.com',
+        password: 'wrongpass',
+      };
+      mockAuthService.login.mockRejectedValueOnce(
+        new Error('Invalid credentials'),
+      );
 
       try {
         await authController.login(loginDto);
@@ -59,8 +69,9 @@ describe('AuthController', () => {
   describe('register', () => {
     it('should register a new user successfully', async () => {
       const registerDto: RegisterDto = {
-        email: 'newuser@test.com', password: 'newpass',
-        name: 'teste'
+        email: 'newuser@test.com',
+        password: 'newpass',
+        name: 'teste',
       };
 
       const result = await authController.register(registerDto);
@@ -70,10 +81,13 @@ describe('AuthController', () => {
 
     it('should throw an error for invalid registration data', async () => {
       const registerDto: RegisterDto = {
-        email: 'invalid', password: 'short',
-        name: ''
+        email: 'invalid',
+        password: 'short',
+        name: '',
       };
-      mockAuthService.register.mockRejectedValueOnce(new Error('Invalid registration data'));
+      mockAuthService.register.mockRejectedValueOnce(
+        new Error('Invalid registration data'),
+      );
 
       try {
         await authController.register(registerDto);

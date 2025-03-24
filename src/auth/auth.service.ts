@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
+import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 
@@ -16,7 +17,7 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async validateCredentials(email: string, password: string): Promise<any> {
+  async validateCredentials(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
       return null;
@@ -27,8 +28,7 @@ export class AuthService {
       return null;
     }
 
-    const { password: _, ...result } = user;
-    return result;
+    return user;
   }
 
   async register(registerDto: RegisterDto) {
@@ -52,7 +52,13 @@ export class AuthService {
     };
   }
 
-  async login(email: string, password: string) {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{
+    access_token: string;
+    user: User;
+  }> {
     const user = await this.validateCredentials(email, password);
     if (!user) {
       throw new ConflictException('Credenciais inválidas.');
@@ -60,6 +66,7 @@ export class AuthService {
 
     return {
       access_token: this.generateJwtToken(user),
+      user,
     };
   }
 }

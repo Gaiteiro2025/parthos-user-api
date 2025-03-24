@@ -40,6 +40,9 @@ export class UsersService {
     }
 
     await this.usersRepository.delete(id);
-    return { success: true, message: `Usuário com id ${id} removido com sucesso.` };
+    return {
+      success: true,
+      message: `Usuário com id ${id} removido com sucesso.`,
+    };
   }
 }

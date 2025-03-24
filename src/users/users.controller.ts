@@ -1,5 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'; // Importando os decorators Swagger
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -15,7 +29,11 @@ export class UsersController {
 
   @Post()
   @ApiOperation({ summary: 'Cria um novo usuário' })
-  @ApiResponse({ status: 201, description: 'Usuário criado com sucesso', type: User })
+  @ApiResponse({
+    status: 201,
+    description: 'Usuário criado com sucesso',
+    type: User,
+  })
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }
@@ -30,7 +48,10 @@ export class UsersController {
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza um usuário' })
   @ApiResponse({ status: 200, description: 'Usuário atualizado', type: User })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<User> {
     return this.usersService.update(id, updateUserDto);
   }
 
@@ -38,7 +59,9 @@ export class UsersController {
   @ApiOperation({ summary: 'Remove um usuário pelo ID' })
   @ApiResponse({ status: 200, description: 'Usuário removido com sucesso' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
-  remove(@Param('id') id: string): Promise<{ success: boolean; message: string }> {
+  remove(
+    @Param('id') id: string,
+  ): Promise<{ success: boolean; message: string }> {
     return this.usersService.remove(id);
   }
 }
