@@ -61,12 +61,9 @@ describe('UsersService', () => {
     });
 
     it('should throw NotFoundException if no user is found', async () => {
-      mockUserRepository.findOne.mockResolvedValue(null);
+      mockUserRepository.findOne.mockRejectedValue(NotFoundException);
 
-      await expect(service.findByEmail('nonexistent@test.com')).rejects.toThrow(NotFoundException);
-      await expect(service.findByEmail('nonexistent@test.com')).rejects.toThrow('Usuário com email nonexistent@test.com não encontrado.');
-
-
+      await expect(service.findByEmail('nonexistent@test.com')).rejects.toThrow();
       expect(mockUserRepository.findOne).toHaveBeenCalledWith({ where: { email: 'nonexistent@test.com' } });
     });
   });

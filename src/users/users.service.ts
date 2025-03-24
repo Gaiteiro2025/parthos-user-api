@@ -17,13 +17,7 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { email } });
-
-    if (!user) {
-      throw new NotFoundException(`Usuário com email ${email} não encontrado.`);
-    }
-
-    return user;
+    return this.usersRepository.findOne({ where: { email } });
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
@@ -46,6 +40,9 @@ export class UsersService {
     }
 
     await this.usersRepository.delete(id);
-    return { success: true, message: `Usuário com id ${id} removido com sucesso.` };
+    return {
+      success: true,
+      message: `Usuário com id ${id} removido com sucesso.`,
+    };
   }
 }
