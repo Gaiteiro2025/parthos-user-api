@@ -1,6 +1,6 @@
 # Parthos User API
 
-Este repositório contém a API de usuário e autenticação do Parthos.
+Este repositório contém a API de usuário e autenticação do Parthos, responsável pelo gerenciamento de contas, autenticação e autorização dentro do ecossistema Parthos.
 
 ## Índice
 
@@ -10,8 +10,9 @@ Este repositório contém a API de usuário e autenticação do Parthos.
 4. [Docker](#docker)
 5. [Testes](#testes)
 6. [Integração Contínua](#integracao-continua)
-7. [Contribuição](#contribuicao)
-8. [Licença](#licenca)
+7. [Releases](#releases)
+8. [Contribuição](#contribuicao)
+9. [Licença](#licenca)
 
 ---
 
@@ -45,7 +46,6 @@ DB_USER=postgres
 DB_PASS=postgres
 DB_NAME=nestdb
 JWT_SECRET=default_secret
-
 ```
 
 ## Uso
@@ -112,7 +112,7 @@ $ npm run test
 $ npm run test:cov
 ```
 
-### Testes End-to-End (E2E)
+### Testes de End-to-End (E2E)
 
 ```bash
 $ npm run test:e2e
@@ -132,6 +132,17 @@ O projeto utiliza GitHub Actions para rodar os testes automaticamente nas PRs pa
 
 Arquivo `.github/workflows/test.yml`:
 
+---
+
+## Releases
+
+Acompanhe as versões e mudanças da API:
+
+- **[Versão 1.0.0](https://github.com/Gaiteiro2025/parthos-user-api/releases/tag/v1.0.0)**
+
+Novas versões serão lançadas conforme melhorias e novas funcionalidades forem implementadas.
+
+---
 
 ## Contribuição
 
